@@ -47,7 +47,7 @@
 1. Download the script:
 ```powershell
 # Download the script
-Invoke-WebRequest -Uri "https://your-repo/VT-HashChecker.ps1" -OutFile "VT-HashChecker.ps1"
+Invoke-WebRequest -Uri "[https://your-repo/VT-HashChecker.ps1](https://raw.githubusercontent.com/jbianco-prog/Get-VTReport/refs/heads/main/Get-VTReport.ps1)" -OutFile "VT-HashChecker.ps1"
 ```
 
 2. Create your hash list file (`MD5_list_only.txt`):
