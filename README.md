@@ -10,7 +10,7 @@
 
 ## 📖 Description
 
-**VirusTotal Hash Checker** is a PowerShell script that automates the process of checking file hashes (MD5, SHA1, SHA256) against the VirusTotal database. It processes batch lists of hashes, respects API rate limits, and generates detailed CSV reports with threat level classifications.
+**Get-VTReport** is a PowerShell script that automates the process of checking file hashes (MD5, SHA1, SHA256) against the VirusTotal database. It processes batch lists of hashes, respects API rate limits, and generates detailed CSV reports with threat level classifications.
 
 ### ✨ Key Features
 
@@ -50,7 +50,7 @@
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jbianco-prog/Get-VTReport/refs/heads/main/Get-VTReport.ps1" -OutFile "Get-VTReport.ps1"
 ```
 
-2. Create your hash list file (`MD5_list_only.txt`):
+2. Create your hash list file (`MD5_HashList.txt`):
 ```text
 5d41402abc4b2a76b9719d911017c592
 098f6bcd4621d373cade4e832627b4f6
@@ -63,14 +63,14 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jbianco-prog/Get-VTRep
 $VTApiKey = "your_actual_api_key_here"
 
 # Configure file paths
-$HashListFile = ".\MD5_list_only.txt"
-$ResultFile = ".\Result_VT.csv"
-$LogFile = ".\VT_Check_Log.txt"
+$HashListFile = ".\MD5_HashList.txt"
+$ResultFile = ".\VTReport_Result.csv"
+$LogFile = ".\VTReport_Log.txt"
 ```
 
 4. Run the script:
 ```powershell
-.\VT-HashChecker.ps1
+.\Get-VTReport.ps1
 ```
 
 ---
@@ -119,7 +119,7 @@ graph TD
 | Variable | Description | Default | Notes |
 |----------|-------------|---------|-------|
 | `$VTApiKey` | Your VirusTotal API key | Required | Get from virustotal.com |
-| `$VTApiVersion` | API version to use | `"v2"` | v2 or v3 |
+| `$VTApiVersion` | API version to use | `"v2"` | v2 tested, v3 compatible |
 | `$sleepTime` | Delay between requests (seconds) | `16` | Free API: 4/min = 15s minimum |
 | `$maxRetries` | Max retry attempts on error | `3` | Recommended: 3-5 |
 
@@ -127,9 +127,9 @@ graph TD
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `$HashListFile` | Input file with hash list | `.\MD5_list_only.txt` |
-| `$ResultFile` | Output CSV file | `.\Result_VT.csv` |
-| `$LogFile` | Log file path | `.\VT_Check_Log.txt` |
+| `$HashListFile` | Input file with hash list | `.\MD5_HashList.txt` |
+| `$ResultFile` | Output CSV file | `.\VTReport_Result.csv` |
+| `$LogFile` | Log file path | `.\VTReport_Log.txt` |
 
 ### Display Settings
 
@@ -144,15 +144,15 @@ graph TD
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `$suspiciousThreshold` | Detections for "Suspicious" | `5` |
-| `$maliciousThreshold` | Detections for "Malicious" | `10` |
+| `$suspiciousThreshold` | Detections for "Suspicious" | `2` |
+| `$maliciousThreshold` | Detections for "Malicious" | `4` |
 
 ### Threat Levels Explained
 
 - **Clean** (0 detections): No AV engines detected threats
-- **Low** (1-4 detections): Minimal detections, possible false positives
-- **Suspicious** (5-9 detections): Multiple detections, investigate further
-- **Malicious** (10+ detections): High confidence malware
+- **Low** (1 detection): Single detection, likely false positive
+- **Suspicious** (2-3 detections): Multiple detections, investigate further
+- **Malicious** (4+ detections): High confidence malware
 
 ---
 
@@ -194,7 +194,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 
 ## 📄 Output Files
 
-### CSV Report (`Result_VT.csv`)
+### CSV Report (`VTReport_Result.csv`)
 
 The script generates a CSV file with the following columns:
 
@@ -216,13 +216,13 @@ Hash;Hash_Type;Scan_Date;Detections;Total_Engines;Detection_Rate;Threat_Level;Pe
 098f6bcd4621d373cade4e832627b4f6;MD5;2025-10-15 08:15:42;0;69;0%;Clean;https://www.virustotal.com/gui/file/...
 ```
 
-### Log File (`VT_Check_Log.txt`)
+### Log File (`VTReport_Log.txt`)
 
 Detailed execution log with timestamps:
 
 ```text
 16/10/2025 14:30:00 :: START :: Log file created
-16/10/2025 14:30:00 :: INFO :: Result file initialized: .\Result_VT.csv
+16/10/2025 14:30:00 :: INFO :: Result file initialized: .\VTReport_Result.csv
 16/10/2025 14:30:00 :: INFO :: Starting scan of 25 hashes
 16/10/2025 14:30:15 :: INFO :: Hash: 5d41402abc... | Detections: 15/70 | Level: Suspicious
 16/10/2025 14:30:31 :: INFO :: Hash: 098f6bcd... | Detections: 0/69 | Level: Clean
@@ -244,4 +244,262 @@ Loaded 10 hashes from file.
 API delay: 16 seconds between requests
 
 [1/10] Checking hash: 5d41402abc4b2a76b9719d911017c592
-  Scan Date 
+  Scan Date   : 2025-10-16 14:30:25
+  Detections  : 15/70 (21.43%)
+  Threat Level: Suspicious
+  Permalink   : https://www.virustotal.com/gui/file/...
+
+[2/10] Checking hash: 098f6bcd4621d373cade4e832627b4f6
+  Scan Date   : 2025-10-15 08:15:42
+  Detections  : 0/69 (0%)
+  Threat Level: Clean
+  Permalink   : https://www.virustotal.com/gui/file/...
+
+============================================
+  SCAN COMPLETE - STATISTICS
+============================================
+
+Total hashes processed : 10
+Clean files            : 7
+Suspicious files       : 2
+Malicious files        : 1
+Not found in database  : 0
+Errors                 : 0
+
+Duration               : 0h 3m 12s
+
+Results saved to       : .\VTReport_Result.csv
+Log file saved to      : .\VTReport_Log.txt
+
+============================================
+```
+
+---
+
+## 🔧 Advanced Usage
+
+### Custom Threat Thresholds
+
+Adjust thresholds based on your security requirements:
+
+```powershell
+# Strict mode (lower thresholds)
+$suspiciousThreshold = 1
+$maliciousThreshold = 2
+
+# Lenient mode (higher thresholds)
+$suspiciousThreshold = 5
+$maliciousThreshold = 10
+```
+
+### Premium API Configuration
+
+If you have a premium VirusTotal API key with higher rate limits:
+
+```powershell
+# Premium API: 1000 requests per minute
+$sleepTime = 1  # 1 second between requests
+```
+
+### Processing Large Hash Lists
+
+For very large lists (1000+ hashes):
+
+```powershell
+# Disable progress bar for better performance
+$showProgress = $false
+
+# Increase retry attempts
+$maxRetries = 5
+```
+
+### Filtering Results
+
+Use PowerShell to filter the CSV output:
+
+```powershell
+# Show only malicious files
+Import-Csv .\VTReport_Result.csv -Delimiter ';' | Where-Object { $_.Threat_Level -eq "Malicious" }
+
+# Show files with detection rate > 10%
+Import-Csv .\VTReport_Result.csv -Delimiter ';' | Where-Object { [decimal]($_.Detection_Rate -replace '%','') -gt 10 }
+
+# Export suspicious and malicious only
+Import-Csv .\VTReport_Result.csv -Delimiter ';' | Where-Object { $_.Threat_Level -in @("Suspicious","Malicious") } | Export-Csv .\Threats_Only.csv -Delimiter ';' -NoTypeInformation
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**1. Invalid API Key Error**
+```
+ERROR: Please configure your VirusTotal API key in the script!
+```
+**Solution:**
+- Verify your API key is correct (64 characters)
+- Ensure no extra spaces before/after the key
+- Get a new key from virustotal.com if needed
+
+**2. Rate Limit Exceeded**
+```
+Rate limit reached. Waiting 60 seconds...
+```
+**Solution:**
+- This is normal for free API (4 requests/minute)
+- Script automatically waits and retries
+- Consider upgrading to Premium API for higher limits
+
+**3. Hash Not Found in Database**
+```
+Status: NOT FOUND IN DATABASE
+```
+**Solution:**
+- The file has never been uploaded to VirusTotal
+- This is normal for custom/proprietary files
+- Consider uploading the actual file to VT manually
+
+**4. Connection Timeout**
+```
+ERROR: Unable to query VirusTotal API
+```
+**Solution:**
+- Check your internet connection
+- Verify firewall allows HTTPS (port 443)
+- Check if VirusTotal is accessible from your network
+
+**5. Invalid Hash Format**
+```
+INVALID HASH FORMAT: abc123
+```
+**Solution:**
+- Ensure hashes are MD5 (32 chars), SHA1 (40 chars), or SHA256 (64 chars)
+- Check for typos or extra characters
+- Use only hexadecimal characters (0-9, a-f)
+
+---
+
+## 📊 API Rate Limits
+
+### Free API
+- **Requests**: 4 per minute (500 per day)
+- **Script setting**: `$sleepTime = 16` (recommended 15+ seconds)
+- **Best for**: Small to medium hash lists (< 500 hashes)
+
+### Premium API
+- **Requests**: 1,000 per minute
+- **Script setting**: `$sleepTime = 1` (or less)
+- **Best for**: Large-scale scanning operations
+
+**Tip**: The script automatically handles rate limiting by pausing when limits are reached.
+
+---
+
+## 📜 Use Cases
+
+### Security Operations
+- **Incident Response**: Quick triage of suspicious file hashes
+- **Threat Hunting**: Bulk verification of IOCs (Indicators of Compromise)
+- **Malware Analysis**: Pre-screening files before sandbox analysis
+
+### Compliance & Audit
+- **File Validation**: Verify integrity of software downloads
+- **Baseline Creation**: Document known-good file hashes
+- **Audit Trails**: Maintain records of security checks
+
+### Development & Testing
+- **Build Verification**: Check build artifacts against VT database
+- **Dependency Scanning**: Validate third-party libraries
+- **Release Validation**: Ensure clean software releases
+
+---
+
+## 📚 Best Practices
+
+✅ **Do:**
+- Use a dedicated API key for automation
+- Keep hash lists organized by source/date
+- Review logs regularly for errors
+- Archive CSV results for compliance
+- Use appropriate sleep times for your API tier
+- Validate hash quality before submission
+
+❌ **Don't:**
+- Share your API key publicly
+- Set sleep time below API limits
+- Submit sensitive/private file hashes without authorization
+- Ignore "Not Found" results (may need file upload)
+- Process duplicate hashes (deduplicate first)
+
+---
+
+## 🔗 Related Resources
+
+- [VirusTotal API Documentation](https://developers.virustotal.com/reference)
+- [VirusTotal API Key Management](https://www.virustotal.com/gui/user/YOUR_USERNAME/apikey)
+- [File Hash Generator Tools](https://emn178.github.io/online-tools/sha256_checksum.html)
+- [PowerShell Documentation](https://docs.microsoft.com/en-us/powershell/)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/improvement`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push to the branch (`git push origin feature/improvement`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Micro-one**
+- Website: [micro-one.com](https://micro-one.com)
+- Email: contact@micro-one.com
+
+---
+
+## 📅 Version History
+
+- **v2.1** (16/10/2025) - Enhanced version with improved logging and error handling
+- **v2.0** (16/10/2025) - Major rewrite with configuration section and statistics
+- **v1.0** (04/03/2018) - Initial release
+
+---
+
+## ⭐ Support
+
+If you find this script useful, please consider:
+- ⭐ Starring the repository
+- 🐛 Reporting issues
+- 💡 Suggesting improvements
+- 📢 Sharing with the security community
+
+---
+
+## ⚠️ Disclaimer
+
+This tool is provided for legitimate security research and analysis purposes only. Users are responsible for:
+- Complying with VirusTotal's Terms of Service
+- Respecting data privacy and confidentiality
+- Following applicable laws and regulations
+- Not submitting sensitive or private information
+
+The authors are not responsible for misuse of this tool.
+
+---
+
+**Last updated:** October 16, 2025  
+**Version:** 2.1 (Get-VTReport)  
+**Tested on:** Windows 10/11, Windows Server 2019/2022, PowerShell 5.1+
