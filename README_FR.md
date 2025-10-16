@@ -47,7 +47,7 @@
 1. Téléchargez le script :
 ```powershell
 # Télécharger le script
-Invoke-WebRequest -Uri "https://micro-one.com/scripts/Get-VTReport.ps1" -OutFile "Get-VTReport.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jbianco-prog/Get-VTReport/refs/heads/main/Get-VTReport.ps1" -OutFile "Get-VTReport.ps1"
 ```
 
 2. Créez votre fichier de liste de hash (`MD5_HashList.txt`) :
