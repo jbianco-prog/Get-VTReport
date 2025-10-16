@@ -501,5 +501,5 @@ The authors are not responsible for misuse of this tool.
 ---
 
 **Last updated:** October 16, 2025  
-**Version:** 2.1 (Get-VTReport)  
+**Version:** 2.1 (Get-VTReport), built by humans augmented by AI 
 **Tested on:** Windows 10/11, Windows Server 2019/2022, PowerShell 5.1+
