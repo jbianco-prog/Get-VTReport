@@ -49,7 +49,7 @@ $showProgress = $true                            # Show progress bar
 ## Detection Threshold
 ## --
 $suspiciousThreshold = 2                         # Number of detections to consider suspicious
-$maliciousThreshold = 4                          # Number of detections to consider malicious
+$maliciousThreshold = 10                         # Number of detections to consider malicious
 
 ##
 ## ============================================================================
