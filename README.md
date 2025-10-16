@@ -1,4 +1,4 @@
-# 🔍 VirusTotal Hash Checker
+# 🔍 Get-VTReport
 > PowerShell script for batch scanning file hashes against VirusTotal database
 
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue.svg)](https://github.com/PowerShell/PowerShell)
