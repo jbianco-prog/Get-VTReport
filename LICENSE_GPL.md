@@ -70,7 +70,7 @@ Any work based on or derived from this software must also be licensed under GPL 
 If you modify this software and want to distribute your version, include the following notice at the top of each file:
 
 ```
-SafeNAS - Network Antivirus Monitoring Script
+Get-VTReport - Check file hashes against VirusTotal database
 Copyright (C) 2014-2025 Micro-one
 Copyright (C) <YEAR> <YOUR NAME>
 
