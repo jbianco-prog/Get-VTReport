@@ -19,7 +19,7 @@
 ## --
 ## VirusTotal API Configuration
 ## --
-$VTApiKey = "YOUR VIRUS TOTAL API KEY HERE"      # Your VirusTotal API key (get it from https://www.virustotal.com/gui/join-us)
+$VTApiKey = "YOUR_VIRUSTOTAL_API_KEY_HERE"      # Your VirusTotal API key (get it from https://www.virustotal.com/gui/join-us)
 $VTApiVersion = "v2"                             # API version (v2 or v3), tested in v2 only
 
 ## --
