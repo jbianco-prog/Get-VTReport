@@ -1,6 +1,6 @@
 ﻿## -
 ## - Downloaded from micro-one.com
-## - Operational Security
+## - Operational Security 
 ## -
 ## - Get-VTReport (v.2.1)
 ## - PowerShell script to check file hashes against VirusTotal database
